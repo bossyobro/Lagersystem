@@ -7,7 +7,7 @@ dbconn = mysql.connector.connect(
     database="lager"
 )
 
-mycursor = dbconn.cursor()
+mycursor = dbconn.cursor(buffered=True)
 
 if (dbconn):
     print("Yippie!")
