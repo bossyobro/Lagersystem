@@ -207,7 +207,7 @@ class InventoryApp:
             quit()
 
 
-# === Run app ===
+
 if __name__ == "__main__":
     app = InventoryApp()
     app.run()
