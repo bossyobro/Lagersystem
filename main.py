@@ -23,6 +23,7 @@ class InventoryApp:
             self.user = user
             self.logged_in = True
             print("Login Sucessfull!")
+            self.return_to_menu()
             self.print_ui()
         else:
             print("Login Unsucessfull, try again!")
@@ -32,7 +33,7 @@ class InventoryApp:
     def print_ui(self):
         mycursor.execute("SELECT user_type FROM brukere WHERE username = %s", (self.user[1],))
         user_type = mycursor.fetchone()
-
+        system("cls")
         if user_type[0] == "Admin":
             self.admin_ui()
         else:
@@ -92,7 +93,7 @@ class InventoryApp:
             print(f"{'Navn':<20}{'Varenummer':<15}{'Pris':<10}{'Antall':<10}{'Kategori':<15}")
             print("-" * 70)
             for vare in varer:
-                print(f"{vare[0]:<20}{vare[1]:<15}{vare[2]:<10}{vare[3]:<10}{vare[4]:<15}")
+                print(f"{vare[1]:<20}{vare[2]:<15}{vare[3]:<10}{vare[4]:<10}{vare[5]:<15}")
         else:
             print("Ingen varer funnet i lageret.")
         self.return_to_menu()
@@ -103,7 +104,7 @@ class InventoryApp:
         result = mycursor.fetchone()
         if result:
             print("Vare funnet:")
-            print(f"Navn: {result[0]}, Varenummer: {result[1]}, Pris: {result[2]}, Antall: {result[3]}, Kategori: {result[4]}")
+            print(f"Navn: {result[1]}, Varenummer: {result[2]}, Pris: {result[3]}, Antall: {result[4]}, Kategori: {result[5]}")
         else:
             print("Ingen vare funnet med det oppgitte varenummeret.")
         self.return_to_menu()
@@ -115,7 +116,7 @@ class InventoryApp:
         item = mycursor.fetchone()
 
         if item:
-            print(f"Vare funnet: Navn: {item[0]}, Pris: {item[2]}, Antall: {item[3]}, Kategori: {item[4]}")
+            print(f"Vare funnet: Navn: {item[1]}, Pris: {item[3]}, Antall: {item[4]}, Kategori: {item[5]}")
             ny_pris = input("Ny pris (trykk enter for å beholde nåværende): ")
             ny_antall = input("Nytt antall (trykk enter for å beholde nåværende): ")
 
@@ -137,7 +138,7 @@ class InventoryApp:
         item = mycursor.fetchone()
 
         if item:
-            print(f"Vare funnet: Navn: {item[0]}, Pris: {item[2]}, Antall: {item[3]}, Kategori: {item[4]}")
+            print(f"Vare funnet: Navn: {item[1]}, Pris: {item[3]}, Antall: {item[4]}, Kategori: {item[5]}")
             mycursor.execute("DELETE FROM varer WHERE varenummer = %s", (varenummer,))
             dbconn.commit()
 
@@ -165,11 +166,11 @@ class InventoryApp:
         antall = input("Antall: ")
         kategori = input("A) elektronikk, B) klær, C) kontor [A/B/C]? : ")
 
-        if kategori == "A":
+        if kategori == "A" or kategori == "a":
             kategori = "elektronikk"
-        elif kategori == "B":
+        elif kategori == "B" or kategori == "b":
             kategori = "klaer"
-        elif kategori == "C":
+        elif kategori == "C" or kategori == "c":
             kategori = "kontor"
         else:
             print("Du valgte ikke et gyldig alternativ!")
