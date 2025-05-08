@@ -1,9 +1,53 @@
 from db import *
 from os import system
 
-def print_ui():
+def print_ui(user, logged_in):
+
+    if logged_in == False:
+        UserAuth()
+    else:
+        mycursor.execute("SELECT user_type FROM brukere WHERE username = %s", (user[1],))
+        user_type = mycursor.fetchone()
+
+    print(user_type[0])
+
+    if user_type[0] == "Admin":
+        admin_ui()
+    else:
+        worker_ui()
+
+
+
+
+
+
+def worker_ui():
+     while True:
+        # system("cls")
+        print("Velkommen til Varehåndteringssystemet!")
+        print("1. Vis alle varer")
+        print("2. Søk")
+        print("3. Oppdatere en vare")
+        print("4. Avslutt")
+        userInput = int(input("Pick from 1-4: "))
+
+
+        if userInput == 1:
+            view_items()
+        elif userInput == 2:
+            search_items()
+        elif userInput == 3:
+            update_storage()
+        elif userInput == 4:
+            quit_program()
+        else:
+            print("Ugyldig valg, prøv igjen.")
+
+
+
+def admin_ui():
     while True:
-        system("cls")
+        # system("cls")
         print("Velkommen til Varehåndteringssystemet!")
         print("1. Legg til en ny vare")
         print("2. Vis alle varer")
@@ -11,7 +55,7 @@ def print_ui():
         print("4. Oppdatere en vare")
         print("5. Slett en vare")
         print("6. Avslutt")
-        userInput = int(input("Pick from 1-5: "))
+        userInput = int(input("Pick from 1-6: "))
 
         if userInput == 1:
             add_item()
@@ -164,5 +208,28 @@ def return_to_menu():
         print("Sorry, it seems something went wrong")
         quit()
 
+def UserAuth():
+    # system("cls")
+    print("Velkommen til Varehåndteringssystemet!")
+    print("Vennligst logg inn for å fortsette.")
+    username = input("Brukernavn: ")
+    password = input("Passord: ")
 
-print_ui()
+    # Sjekk brukernavn og passord i databasen
+    mycursor.execute("SELECT * FROM brukere WHERE username = %s AND password = %s", (username, password))
+    user = mycursor.fetchone()
+
+    if user:
+        logged_in = True
+        print("Login Sucessfull!")
+        print_ui(user, logged_in)
+    else:
+        print("Login Unsucessfull try again!")
+        enter = input("Press enter to continue... ")
+        if enter == "":
+            return UserAuth()
+    
+
+    
+UserAuth()
+
